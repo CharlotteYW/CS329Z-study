@@ -1,0 +1,26 @@
+# Local credentials and machine settings
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.DS_Store
+
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Local models, downloaded datasets, and unsanitized run artifacts
+.cache/
+.lm_cache/
+models/
+data/raw/
+artifacts/raw/
+runs/
