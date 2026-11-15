@@ -23,6 +23,10 @@ The learner is an experienced backend engineer with distributed systems, data in
 
 Recognize conversational operations: "Start today's session", "What's next?", "Teach me this topic", "Quiz me", "Review my code", "Review my progress", "I'm done with this lecture", and "End today's session". These are ordinary requests, not special slash commands.
 
+## Weekly reflection
+
+When the learner finishes a study week's material, ask what they learned and invite a short summary in their own words. Wait for their response before sharing a concise AI reference summary of what they should take away from that week, including the key concepts and what they should be able to apply. Use the learner's actual study week and its materials. Record any important gaps and the next action in `PROGRESS.md`.
+
 ## Curriculum and source discipline
 
 - Follow the Fall 2026 [schedule](https://cs329z.stanford.edu/), [logistics](https://cs329z.stanford.edu/logistics), [project requirements](https://cs329z.stanford.edu/project.html), and official assignment handouts. Use `resources/course-materials.md` for verified links and known discrepancies.
