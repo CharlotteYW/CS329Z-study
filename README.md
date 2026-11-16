@@ -4,28 +4,24 @@ A self-paced learning workspace aligned with [Stanford CS329Z, Fall 2026](https:
 
 ## Start here
 
-1. Read [current progress](PROGRESS.md) and the next activity.
-2. Use the [learning roadmap](ROADMAP.md) to understand the module and its evidence requirements.
-3. Open the [verified course resource index](resources/course-materials.md).
-4. Begin with the [first session](lectures/01-foundations.md) and [system-boundaries exercise](exercises/01-system-boundaries/README.md).
-5. Follow the [first study-week plan](lectures/week-01-plan.md) for a focused six-hour introduction.
+Start with the [current study plan](lectures/week-01-plan.md) and use [progress](PROGRESS.md) to resume. The [roadmap](ROADMAP.md) maps course topics to engineering decisions; the [verified resource index](resources/course-materials.md) is available for reference.
 
-The confirmed pace is **5–7 hours per week**. Modules may span multiple weeks. Study combines primary sources, small implementations, tests, explanation, and cumulative review. Watching a lecture is an activity; demonstrated understanding is the completion criterion.
+The pace is **3–4 hours per week**. Follow the lecture videos, write brief notes, and use each week's `references.md` for selected readings and comparisons. Draw examples from the course materials and documented open source projects. Apply the material in the official assignments and a project.
 
 ## Workspace map
 
 | Location | Purpose |
 |---|---|
 | [AGENTS.md](AGENTS.md) | Durable tutoring, language, source, and integrity instructions |
-| [ROADMAP.md](ROADMAP.md) | Ten modules, official lecture mapping, exercises, and completion gates |
+| [ROADMAP.md](ROADMAP.md) | Ten course modules mapped to engineering decisions and evidence |
 | [PROGRESS.md](PROGRESS.md) | Evidence, current state, open questions, and next action |
 | [resources/](resources/course-materials.md) | Course links, access limitations, and verification evidence |
 | [lectures/](lectures/01-foundations.md) | Session preparation and subsequent learner notes |
 | [readings/](readings/README.md) | Active paper-reading and presentation protocol |
-| [exercises/](exercises/01-system-boundaries/README.md) | Mentor-designed practice, distinct from official homework |
+| [exercises/](exercises/01-system-boundaries/README.md) | Optional standalone practice, distinct from official homework |
 | [assignments/](assignments/README.md) | HW1/HW2 milestone guidance; implementations created later |
 | [project/](project/README.md) | Candidate comparison and independent project milestones |
-| [reviews/](reviews/README.md) | Diagnostic questions, rubric, and future assessment evidence |
+| [reviews/](reviews/README.md) | Artifact review, rubric, and future assessment evidence |
 
 ## Working agreements
 

@@ -1,6 +1,6 @@
 # E1 — System Boundaries in an Incident-Triage Assistant
 
-**Type:** Mentor-designed practice, not official homework. **State:** Not Started. No implementation or answers have been provided.
+**Type:** Optional mentor-designed practice for a learner who wants to build a first controller. It is not part of the default study path or the official homework. **State:** Not Started. No implementation or answers have been provided.
 
 ## Objective
 
@@ -29,7 +29,7 @@ Write a 200–400 word English note, `design.md`, with two control-flow sketches
 
 Label the policy/model, controller, tools, observations, state, and environment. Explain who makes each decision, which state survives a step, how a failure is represented, and why execution must stop. Choose the simplest useful baseline and propose five tests. Present your design for review before implementing.
 
-This is the **first practical task**. It does not require coding during the opening session.
+Use this design only if a review exposes a specific gap in control-flow reasoning.
 
 ## Part B — Implement the Controller (60–90 minutes after design review)
 
