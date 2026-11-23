@@ -110,6 +110,8 @@ Official placement: week 3, Mon Oct 5, 2026. Roadmap: M3.
 - Slides: [Slides](https://web.stanford.edu/class/cs329z/slides/lecture04.pdf) — reachable.
 - Video: [Video](https://youtu.be/s0S38lz6O7M) — linked; endpoint reachable; playback untested.
 
+L04 refresh on November 23: the official schedule still links these resources. Direct checks returned HTTP 200 for both endpoints and a PDF signature for the slides. This refresh confirms links and access only; full slide review and video playback were not performed.
+
 **Official readings**
 
 - [Toolformer: Language Models Can Teach Themselves to Use Tools](https://arxiv.org/abs/2302.04761) — reachable.
