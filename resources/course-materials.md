@@ -127,6 +127,10 @@ Official placement: week 3, Wed Oct 7, 2026. Roadmap: M3.
 - Video: [Video](https://youtu.be/q0Q-Hy8TTps) — linked; endpoint reachable; playback untested.
 - Code: [Code](https://github.com/cs329z/lecture5-frameworks) — reachable.
 
+November 25 notebook setup check: the official schedule still links this repository. Its `lecture5.ipynb`, README, setup script, and lockfile were inspected at commit `4e418289b3032cb960984250395525eb91ae25c2`. The demo requires Python 3.12 and OpenRouter, and includes DSPy, LangGraph, Temporal, and tinycal. Local setup/check results are in the [Week 03 setup guide](../lectures/week-03/lecture-05-setup.md). The slide PDF text fetch exceeded the web tool's size limit; no fresh slide review or video playback was performed.
+
+November 26 framework comparison check: the web reader still rejected the 14,413,415-byte slide PDF, but a direct download succeeded. Text was extracted from its 132 pages. Selected relevant text and rendered PDF pages 16 (Framework Landscape), 80 (Agent Harness), and 98 (Temporal Execution Model) were inspected. This resolves access to the relevant slide material; it is not a full-deck review or video-playback check. The original is cached in the ignored lecture working directory. [Reviewed sections and provenance](../lectures/week-03/references.md#lecture-5-framework-landscape-and-agent-harnesses)
+
 **Official readings**
 
 - [DSPy: Compiling Declarative Language Model Calls into Self-Improving Pipelines](https://arxiv.org/abs/2310.03714) — reachable.
@@ -139,7 +143,7 @@ Official placement: week 3, Wed Oct 7, 2026. Roadmap: M3.
 Official placement: week 4, Mon Oct 12, 2026. Roadmap: M4.
 
 - Slides: [Slides](https://web.stanford.edu/class/cs329z/slides/lecture06.pdf) — reachable.
-- Video: not linked in the checked schedule.
+- Video: [Video](https://youtu.be/JC_pLC5EX_w) — now linked in the official schedule, rechecked November 26; endpoint and recording title verified, playback untested.
 
 **Official readings**
 

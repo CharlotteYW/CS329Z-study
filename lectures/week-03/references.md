@@ -6,7 +6,9 @@ L04's discussion and learner reflection are recorded. On November 24, the learne
 
 On November 25, follow-up discussion compares the actual integration work of direct function calling, MCP, and an existing tool gateway. This is an explanation and reference update, not an installation task. [MCP scenario comparison](questions-and-answers.md#when-does-mcp-actually-save-work)
 
-Next: **L05 — Frameworks & Orchestration**, **Not Started**. [Official video](https://youtu.be/q0Q-Hy8TTps) · [Verified course entry](../../resources/course-materials.md#l05). Viewing question: which control-flow, state, and error-handling responsibilities does a framework take over, and which remain with the application?
+On November 26, the learner reported finishing **L05 — Frameworks & Orchestration** and reflected on AI engineering, harnesses, workflow frameworks, orchestration, and telemetry. The AI reference summary was provided after that reflection. Applied module evidence remains for later official work. [Reflection and reference summary](questions-and-answers.md#lecture-5-reflection-and-reference-summary) · [Official video](https://youtu.be/q0Q-Hy8TTps) · [Notebook setup and checks](lecture-05-setup.md)
+
+Next: **L06 — Agent Design Patterns & Scaffolds**, Not Started. The official schedule now links its [video](https://youtu.be/JC_pLC5EX_w), rechecked November 26. Use the [Week 4 entry point](../week-04/references.md); the sources below remain references for review rather than unfinished reading tasks.
 
 - [Official lecture video](https://youtu.be/s0S38lz6O7M)
 - [Official slides](https://web.stanford.edu/class/cs329z/slides/lecture04.pdf)
@@ -14,7 +16,7 @@ Next: **L05 — Frameworks & Orchestration**, **Not Started**. [Official video](
 
 **Viewing prompt used for L04:** when the model proposes a tool call, which validation, execution, and error-reporting responsibilities belong to the runtime?
 
-The L04 reflection is now recorded. No new L05 viewing, reading, code execution, or source recheck is claimed by this entry; the linked resource verification is documented in the course index.
+The L04 and L05 reflections are recorded. L05 viewing is learner-reported; local environment checks and source verification are documented in the setup guide. They do not establish completion of the notebook exercises. The mentor stopped the course kernel and demo services during wrap-up; the VS Code editor tab requires manual saving/closure because desktop control was unavailable.
 
 ## Official readings for reference
 
@@ -98,6 +100,7 @@ Checked on November 24 for the learner's schema-guarantee question. These are ta
 - OpenAI documents JSON Schema function parameters and strict tool definitions. The provider-facing format differs from MCP's wire format; schema mapping must respect provider constraints. [Function calling](https://developers.openai.com/api/docs/guides/function-calling)
 - For the follow-up integration example, the MCP tools specification, OpenAI's function definitions, and Claude's `input_schema` field were rechecked. The notes compare the same input contract in different wrappers and explain service reuse with a constructed order/inventory integration. Automatic schema discovery is distinct from provider-schema compatibility or a guarantee of backward-compatible API changes. [OpenAI function definitions](https://developers.openai.com/api/docs/guides/function-calling.md) · [Claude tool definitions](https://platform.claude.com/docs/en/agents-and-tools/tool-use/define-tools)
 - The pinned architecture places model coordination in hosts and tool capabilities in servers. Current provider documentation describes OpenAI remote MCP tools and Claude's MCP connector, which can manage discovery and invocation on the provider side. These are implementation examples, not a change to the course's protocol revision or a claim that provider request formats are identical. Relevant descriptions were inspected; no connection was configured. [MCP architecture](https://modelcontextprotocol.io/specification/2025-06-18/architecture) · [OpenAI MCP integration](https://developers.openai.com/api/docs/guides/tools-connectors-mcp) · [Claude MCP connector](https://platform.claude.com/docs/en/agents-and-tools/mcp-connector)
+- On November 25, the architecture, tools specification, and function-calling guide were rechecked for a model/host/client boundary clarification. The host creates/manages client components; the model generates requests rather than a client instance. The new comparison diagram is a mentor illustration, not a captured execution trace.
 
 ## Tool-calling benchmarks
 
@@ -117,3 +120,71 @@ Checked on November 25 for the learner's request for a concrete benefit comparis
 - GitHub's official server README documents its hosted endpoint, a VS Code connection example, other MCP hosts including Claude applications, and varying authentication/configuration support. This is the concrete interoperability example used in the notes, rather than an invented claim of universal plug-and-play support. [GitHub MCP server](https://github.com/github/github-mcp-server)
 - VS Code documents adding and using MCP servers through its host integration. Configuration destinations and supported authentication depend on the host/version; no local setup was performed or verified. [VS Code MCP documentation](https://code.visualstudio.com/docs/agent-customization/mcp-servers)
 - The MCP architecture/tools specifications and function-calling guide were rechecked for the November 25 interview reference answer. The answer's selection criteria are mentor engineering judgments grounded in those interface responsibilities; no claim of universal superiority or quantified productivity gain is made.
+
+## Lecture 5 notebook environment
+
+The official schedule and linked code repository were checked on November 25. The README, setup script, lockfile, and notebook establish Python 3.12, OpenRouter credentials, DSPy, LangGraph, Temporal, and the local tinycal demo. The local checkout is pinned and isolated from homework. Infrastructure checks and two minimal model requests passed after the learner replaced a management key with a regular inference key. See the setup guide for commands, outcomes, and first-run instructions. These are run instructions, not extra reading tasks. [Official repository](https://github.com/cs329z/lecture5-frameworks) · [Setup evidence](lecture-05-setup.md)
+
+## RLM, ReAct, and the Lecture 5 demo
+
+References for review, checked November 26 in response to the learner's question. No additional reading task is assigned. The notebook cells and installed DSPy 3.4.0 implementation were inspected; the model tasks were not run, and the papers were not reviewed in full for this answer.
+
+- [Recursive Language Models](https://arxiv.org/abs/2512.24601) — the title and abstract establish the name and inference paradigm: externalized input, programmatic examination/decomposition, and recursive model calls. Distinguish processing an externally stored input from enlarging a model's native context window.
+- [DSPy RLM documentation](https://dspy.ai/current/api/modules/RLM/) — the overview, execution model, and sub-LM configuration explain the sandboxed Python environment, query helpers, iteration limits, and optional separate sub-model. The installed course version's implementation was also checked rather than assuming every current documentation detail applies unchanged.
+  - For the agent-loop follow-up, the "How It Works" section and the installed DSPy 3.4.0 methods `_execute_iteration`, `_process_execution_result`, `forward`, and `_make_llm_tools` were inspected. The local implementation confirms persistent execution/history, direct sub-LM calls, final submission, and fallback extraction after the iteration limit. The Q&A's three-message fixture and four-round trace are mentor-created; only deterministic message selection was executed, with zero model requests. [Worked loop example](questions-and-answers.md#how-does-an-rlm-run-an-agent-loop)
+- [ReAct: Synergizing Reasoning and Acting in Language Models](https://arxiv.org/abs/2210.03629) — the abstract describes interleaving reasoning and actions with environment feedback; it supports the comparison of interaction patterns. For the same-task loop comparison, installed DSPy 3.4.0 `react.py` was also inspected: its `forward` loop records selected tool names/arguments and observations, then extracts the answer after finishing or stopping. The comparison's `search_emails` tool is mentor-defined, not an additional official notebook tool. [Side-by-side loop example](questions-and-answers.md#how-does-this-loop-compare-with-react-on-the-same-task)
+- [Building effective agents: What are agents?](https://www.anthropic.com/research/building-effective-agents#what-are-agents) — distinguishes predefined code paths from model-directed processes and tool usage. Used as an explicitly attributed engineering definition for the learner's workflow question, not as a universal naming rule or a classification asserted by the ReAct/RLM authors. The definitions were checked on November 26; the article's changing framework recommendations are not needed for this explanation.
+- [Official L05 notebook at the local source revision](https://github.com/cs329z/lecture5-frameworks/blob/4e418289b3032cb960984250395525eb91ae25c2/lecture5.ipynb) — the adjacent `dspy.ReAct` and `dspy.RLM` cells demonstrate calendar actions and inbox event extraction, respectively. The proposed RLM execution path in the Q&A is a mentor illustration, not a captured trace. [Explanation](questions-and-answers.md#what-is-rlm-and-how-does-it-relate-to-react-and-dspy)
+
+## Temporal and durable execution
+
+References for review, checked November 26 for the learner's Temporal question. The official notebook's Part 3 source was inspected; its model calls, calendar writes, retry demonstration, and worker-restart demonstration were not executed for this explanation. These sources do not add a reading task.
+
+- [Temporal Workflows and replay](https://docs.temporal.io/workflows#how-workflow-replay-works) — explains reconstruction from event history, deterministic orchestration, and reuse of recorded activity results rather than restoring a process-memory snapshot.
+- [Temporal Activities](https://docs.temporal.io/activities) — defines external units of work, retry behavior, and the recommendation for idempotent activities. Use this to distinguish replaying orchestration from retrying an external operation.
+- [Temporal Workers](https://docs.temporal.io/workers) — explains application-side execution and polling of task queues. The service coordinates execution; workers run application code.
+  - Rechecked for the requested short/detailed summary: the worker-process section explicitly places workflow/activity execution outside the Temporal Service, including when using Temporal Cloud. [Reusable summary](questions-and-answers.md#how-can-i-summarize-temporal-briefly-and-in-detail)
+- [Events and Event History](https://docs.temporal.io/workflow-execution/event) — describes the persisted log, activity completion recording, and retry scheduling. It supports the distinction between a recorded result and an external effect whose completion has not been recorded.
+- [Official L05 notebook: Part 3](https://github.com/cs329z/lecture5-frameworks/blob/4e418289b3032cb960984250395525eb91ae25c2/lecture5.ipynb) — inspect "Making a Durable Workflow," "Retry Flaky Activities," and "Server-based timing" when following the lecture. The examples wrap existing DSPy components, deliberately fail emoji selection twice, and restart a worker during a workflow timer. The reminder returns text rather than delivering an external notification. [Temporal Q&A](questions-and-answers.md#what-is-temporal-and-what-does-lecture-5-use-it-for)
+
+## Temporal product forms and production adoption
+
+References for review, checked November 26 for the learner's product/service/SaaS terminology question. No additional reading task is assigned, and no embedded video was watched.
+
+- [Temporal server repository](https://github.com/temporalio/temporal) — the README identifies the durable execution platform, server source, local development startup, Temporal Technologies, and MIT license. Distinguish the open-source implementation from its hosted offering.
+- [Temporal Service definition](https://docs.temporal.io/temporal-service) — explicitly defines the service as Temporal Server services combined with persistence and visibility stores; "Service" does not mean "Temporal Cloud."
+- [Temporal Cloud getting started](https://docs.temporal.io/cloud/get-started) — documents the commercial managed offering, signup/billing, namespace creation, and client/worker setup. No current price or trial allowance is assumed in this answer.
+- [Datadog on Building Reliable Distributed Applications Using Temporal](https://datadogon.datadoghq.com/episodes/datadog-on-temporal/) — Datadog's own October 29, 2024 description reports adoption beginning in 2020 for software delivery and subsequent broader platform use. Only the published text was inspected, not the video.
+- [Building a notification platform at Coinbase](https://www.coinbase.com/blog/building-a-notification-platform-at-coinbase) — Coinbase's December 14, 2022 engineering article describes per-user notification workflows executed on Temporal. This is a production adoption example, not evidence for industry-wide market share.
+
+The L05 setup cell was re-inspected: `WorkflowEnvironment.start_local(...)` configures a local development service, rather than Temporal Cloud. The adoption assessment is a mentor inference from first-party production accounts, not a quantified popularity ranking. [Terminology Q&A](questions-and-answers.md#is-temporal-a-technology-software-product-running-service-or-saas)
+
+## Airflow versus Temporal
+
+References for review, checked November 26 to refine the learner's comparison. This is mentor-selected context for the learner's question, not an added course reading assignment or a benchmark.
+
+- [What is Airflow?](https://airflow.apache.org/docs/apache-airflow/stable/index.html) — the inspected current documentation (3.4.0) describes an open-source workflow platform, Python-defined DAGs, batch-oriented data/ML pipelines, and event-triggered/agentic workloads. Use it to avoid claiming that Airflow has only static scheduling or cannot orchestrate LLM work.
+- [Airflow architecture](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/overview.html) — explains DAG/task orchestration and the metadata database that stores task, DAG, and variable state. Airflow also persists execution state.
+- [Airflow tasks](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/tasks.html) — documents task-instance states and retry behavior. Recovery at task boundaries differs from replaying Temporal workflow orchestration.
+- [Temporal Workflows and replay](https://docs.temporal.io/workflows#how-workflow-replay-works) — describes history-based reconstruction and reuse of recorded activity results. The typical-use comparison is mentor engineering interpretation grounded in these mechanisms, not a universal product boundary. [Comparison Q&A](questions-and-answers.md#how-does-temporal-compare-with-airflow)
+
+## Observability and reliability
+
+References for review, checked November 26 for the learner's distinction/relationship question. No additional reading task is assigned.
+
+- [OpenTelemetry observability primer](https://opentelemetry.io/docs/concepts/observability-primer/) — the "What is Observability?" and "Reliability and metrics" sections distinguish understanding a system through telemetry from delivering behavior users expect. The latter explicitly notes that uptime alone does not establish correctness or reliability.
+- [Google SRE: Monitoring Distributed Systems](https://sre.google/sre-book/monitoring-distributed-systems/) — "Why Monitor?" connects monitoring to alerting, investigation, trend analysis, and comparisons after changes. Used to support the feedback relationship between evidence and reliability improvements, not to equate monitoring with all of observability.
+- [Temporal Workflows and replay](https://docs.temporal.io/workflows#how-workflow-replay-works) — the recovery mechanism illustrates execution reliability and explains why Temporal history is an operational recovery record as well as information developers can inspect.
+- [Previously inspected L05 framework landscape and telemetry section](#lecture-5-framework-landscape-and-agent-harnesses) — supplies the course context for Temporal and the observability examples. The calendar and wrong-date examples in the [Q&A](questions-and-answers.md#how-do-observability-and-reliability-differ-and-support-each-other) are mentor explanations, not new run results.
+
+## Lecture 5 framework landscape and agent harnesses
+
+References for review, checked November 26 for the learner's request for a complete comparison diagram. No additional reading task is assigned.
+
+- [Official L05 slides: Framework Landscape, PDF pages 14-16](https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=14) — the horizontal Model/Workflow/Agent arrangement is a spectrum of control, with separate Reliability and Observability support categories. The web reader could not fetch the 14,413,415-byte PDF, but a direct download succeeded. Text was extracted from the 132-page file; PDF page 16 was rendered and visually inspected. This is relevant-page review, not a full-deck or video review.
+- [Agent harnesses, PDF pages 78-89](https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=78) — page 80's architecture was rendered and visually inspected; pages 81-85 were text-inspected for the comparison of mini-SWE-agent, OpenHands, Pi, and OpenClaw. Treat the implementation details as lecture snapshots. The diagram and table in the Q&A are mentor reconstructions, not copied slide figures.
+- [Orchestration and telemetry, PDF pages 90-122](https://web.stanford.edu/class/cs329z/slides/lecture05.pdf#page=90) — selected text inspection covers reliability, Temporal's execution model, and the MLflow/LangSmith/Langfuse references. Page 98's client/worker/service architecture was rendered and visually inspected. Not every page in this range was visually reviewed.
+- [LangGraph overview](https://docs.langchain.com/oss/python/langgraph/overview) — current primary documentation explicitly describes a runtime for stateful agents, shared state/nodes/edges, persistence, and durable execution. This prevents treating the lecture's categories as exclusive product capabilities.
+- [Temporal Durable AI](https://docs.temporal.io/ai) — confirms that durable execution can support model-directed agents as well as processing pipelines. This is current product documentation, not proof that the lecture's example harnesses integrate Temporal by default.
+
+The original PDF and a rendered landscape page are cached only in the ignored `notebooks/lecture-05/.runtime/` working directory, outside tracked study artifacts. PDF SHA-256: `51c0176f7956e88339e083c5a404d45fea56af66a5c320aff6e1affd1a454055`. No agent tasks were run. [Layer/category comparison](questions-and-answers.md#where-does-temporal-fit-relative-to-the-model-workflow-framework-and-agent-harness)

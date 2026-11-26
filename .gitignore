@@ -14,8 +14,12 @@ __pycache__/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.ipynb_checkpoints/
 .coverage
 htmlcov/
+
+# Local lecture working copies, credentials, and notebook outputs
+/notebooks/lecture-05/
 
 # Local models, downloaded datasets, and unsanitized run artifacts
 .cache/

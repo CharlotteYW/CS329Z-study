@@ -342,6 +342,27 @@ The learner requested this mentor-written reference answer on November 25. It is
 
 The scenario judgments are illustrative architectural choices, not a claim that MCP is always easier or a measured performance comparison. No additional reading, implementation exercise, or mock interview was assigned.
 
+### Does MCP move the model's function-calling layer into the server?
+
+The learner proposed that function calling produces a function-call string, MCP produces or uses an MCP client, and the calling abstraction moves from the model to the server. The useful intuition is that tool integration can be separated into a reusable service. The model/host/client boundaries need correction:
+
+- **Model output:** a structured tool request identifies a tool and its arguments. Some APIs serialize arguments as a JSON string; this does not turn the request into an executed function. The model can make the same kind of request with or without an MCP backend.
+- **MCP client:** an existing software component managed by the host, not an object the model generates. The host interprets the model request and uses the client to invoke the server.
+- **Protocol boundary:** MCP standardizes client/server context and tool interactions. It is not a universal replacement for OpenAI's and Claude's model inference APIs. Hosts or provider integrations still coordinate model-facing formats.
+- **What is separated:** application-specific discovery, dispatch, and backend integration can be implemented behind the MCP service contract. Model-side tool selection and argument generation remain model responsibilities. Direct function calling already relies on application-side execution; that execution was never inside the LM.
+
+```mermaid
+flowchart TD
+    M["Model: tool name and arguments"] --> H["Host application"]
+    H --> D["Direct: application dispatcher and tool implementation"]
+    H --> C["MCP client inside the host"]
+    C -->|"MCP protocol"| S["MCP server and tool implementation"]
+```
+
+This diagram shows outgoing requests. Results return through the application and are supplied to the model as observations. For the constructed `get_order` example, the model still proposes the order lookup and its ID; the change is how the host routes that proposal to the implementation. The server can in turn call another business API. [Boundary references](references.md#mcp-schema-validation-and-function-calling)
+
+A more precise restatement is: the model proposes actions, the host coordinates them, and MCP supplies a standard client/server interface to tool capabilities. Some business integration code may move from the host to the server, while model-facing coordination remains in the host or provider infrastructure. No model or protocol implementation was run for this clarification.
+
 MCP's advantage here is a shared integration protocol, not a stronger guarantee that the LM selected the right action or emitted valid arguments. The two controls to separate are constraining generation and rejecting invalid inputs before execution. All examples are illustrative. No MCP server, model API, SDK, or validator was run or installed; detailed implementation remains unassessed.
 
 ## Are these all tool-calling models, and what is Lecture 4 teaching?
@@ -432,3 +453,259 @@ This identifies the lecture's main organizing questions. Earlier discussion also
 In later assignment work, use a concrete tool to identify its definition, model request, validation and authorization boundary, execution, returned observation, and success check. Distinguish a malformed request from a schema-valid request for the wrong entity or an unsuccessful business operation. This describes the expected application, not an assignment already implemented or an extra coding exercise for this session.
 
 Continue with L05, Frameworks & Orchestration, when ready. Use the [official video](https://youtu.be/q0Q-Hy8TTps), with the verified entry in the [course resource index](../../resources/course-materials.md#l05). Viewing question: which control-flow, state, and error-handling responsibilities does a framework take over, and which remain with the application? No additional reading is assigned. M3 remains In Progress; this reflection does not establish completion of the module's applied criteria.
+
+## What is RLM, and how does it relate to ReAct and DSPy?
+
+RLM stands for **Recursive Language Model** (plural: Recursive Language Models). It is an inference strategy for processing large inputs through an external execution environment. The full name does not include "Large." ReAct and RLM describe ways to organize model execution; DSPy is the programming framework that implements both as modules. This is a continuation of the [L02 RLM explanation](../week-02/questions-and-answers.md#what-is-a-recursive-language-model-and-what-problems-does-it-address), not a prerequisite missing from L01. [Primary sources](references.md#rlm-react-and-the-lecture-5-demo)
+
+| Concept | Main concern | Mechanism | Course implementation |
+|---|---|---|---|
+| ReAct | Choose the next action from the current task and observations | Interleave reasoning, tool actions, and returned observations | `dspy.ReAct` with calendar tools |
+| RLM | Inspect and decompose a large input, including semantic subproblems | Keep input in environment variables; generate code to inspect/split it; make sub-LM calls when useful; combine results | `dspy.RLM` with an email inbox |
+| DSPy | Build and optimize model-based programs | Signatures, modules, composition, and optimizers | The framework used in Part 1 of the notebook |
+
+The official notebook joins the emails into an `inbox` string and asks which events are held in the Gates building and on which dates. A possible RLM execution is:
+
+1. Store `inbox` in the Python execution environment. The root model receives the task and information about available variables rather than the entire inbox as its initial prompt.
+2. Have the model generate code to inspect the inbox, split messages, and identify candidate passages. For semantic extraction, code can call `llm_query` on selected messages or batches.
+3. Combine extracted event names and dates in code, inspect the result, and return the requested lists.
+
+This is an illustrative execution path, not an observed run of the learner's notebook. Keyword filtering is one possible operation, not a required algorithm or a guarantee of finding every relevant message. "Recursive" refers to model calls delegating selected subproblems to further model calls; repeated code execution alone is not the defining feature. DSPy provides a bounded execution loop and sub-LM query helpers; the root and sub-LM may use the same configured model or different models.
+
+RLM's code/observation loop overlaps with ReAct-style interaction. These are not mutually exclusive categories: a ReAct agent can invoke a tool that uses an RLM, for example. The useful engineering distinction is adaptive tool action versus programmatic access to context and model subcalls, rather than a claim that ReAct cannot process documents. Each model call still has a finite context window. RLM does not enlarge the underlying model's native window, and extra calls can add latency, cost, and extraction errors. Using this notebook module does not require retraining the underlying model. No RLM or ReAct task was executed for this explanation.
+
+### Are ReAct and RLM parallel alternatives, and are both workflows?
+
+They can be compared as agent execution approaches, but they emphasize different design questions rather than defining mutually exclusive categories. ReAct emphasizes how reasoning and actions interact with observations. RLM emphasizes externalizing input and letting model-generated code inspect, decompose, and delegate semantic subproblems through further model calls. ReAct does not require recursive model calls; RLM's execution also contains an action/observation loop.
+
+Using the explicit workflow-versus-agent distinction in Anthropic's engineering article, a **workflow** orchestrates models and tools through predefined code paths, whereas an **agent** lets the model dynamically direct the task's process and tool usage. A workflow can include branches, loops, and model-based routing; it need not be a straight line. Typical ReAct and RLM implementations sit closer to the agent side because the model selects actions or generates processing code at runtime. "Workflow" is also used loosely for any multi-step process, so calling either an "agentic workflow" in casual usage does not establish that its task paths are predefined. This is an engineering terminology distinction, not a new claim that either paper imposes this taxonomy. [Definition and primary mechanisms](references.md#rlm-react-and-the-lecture-5-demo)
+
+For the same inbox/calendar task, a predefined workflow might always extract events, validate fields, and write accepted events using application-defined branches. A ReAct agent can decide to inspect the inbox, check calendar availability, and adjust its next action after a tool response. An RLM can decide how to inspect the stored inbox, which passages need semantic subcalls, and how to aggregate them. These are mentor examples, not observed notebook traces. One composition is a ReAct agent invoking an inbox-analysis tool implemented with an RLM, then acting on its results. The runtime still enforces permissions and execution limits.
+
+A fixed outer `while` loop, tool registry, or iteration budget does not by itself make the task a predefined workflow. The useful question is how much task-specific control is fixed by application code and how much is selected by the model within those bounds.
+
+### How does an RLM run an agent loop?
+
+In the course's DSPy implementation, each root-model iteration generates Python code, the runtime executes it in a persistent interpreter, and the resulting output or handled error enters the history for the next iteration. Code can invoke `llm_query` to delegate a semantic subproblem. A successful `SUBMIT(...)` returns the requested output fields and ends the loop. Reaching `max_iters` invokes a fallback extraction path; it does not establish successful task completion. [Execution documentation and sources](references.md#rlm-react-and-the-lecture-5-demo)
+
+For a small mentor-created variant of the course's inbox question, suppose `inbox` contains these messages, separated by `\n\n=====\n\n`:
+
+```text
+E1: Agent workshop: October 7, 2026, Gates 101.
+E2: Update: Agent workshop moved to Zoom. The date is unchanged.
+E3: RAG seminar: October 8, 2026, Gates 203.
+```
+
+Question: Which events are currently held in Gates, and on which dates? The following is a constructed possible trace, not a model run or the official dataset.
+
+| Root iteration | Model-selected action, executed by the runtime | Observation returned to the root model |
+|---|---|---|
+| 1 | Split the inbox and print messages mentioning Gates | E1 and E3 are candidate matches; a keyword match alone does not resolve later updates |
+| 2 | Find all messages mentioning Agent workshop, including E2; call a sub-LM to resolve its current venue | Illustrative sub-LM response: the workshop moved to Zoom, so exclude it |
+| 3 | Inspect the RAG seminar thread and call a sub-LM to extract the current venue and date | Illustrative sub-LM response: Gates 203, October 8, 2026 |
+| 4 | Submit the remaining event and date | Final result: RAG seminar, 2026-10-08 |
+
+For example, the code generated in iteration 2 could be:
+
+```python
+thread = "\n".join(e for e in emails if "Agent workshop" in e)
+workshop_status = llm_query(
+    "Determine the event's current venue, accounting for updates:\n" + thread
+)
+print(workshop_status)
+```
+
+The runtime executes this code. `llm_query` returns text into `workshop_status`; `print` exposes it as an observation for the root model's next iteration. Variables such as `emails` and `workshop_status` persist in the interpreter. The final generated code could be:
+
+```python
+SUBMIT(event_names=["RAG seminar"], dates=["2026-10-08"])
+```
+
+This example has four root iterations and two sub-LM calls. These are separate counts: a root iteration can make zero, one, or multiple subcalls. In the inspected DSPy 3.4.0 implementation, `llm_query` directly calls the configured sub-LM or default LM; it does not automatically start another complete RLM loop. Deeper recursive RLM nesting depends on the implementation. The root loop's action/observation feedback and the delegation to model subcalls are related but distinct mechanisms.
+
+The runtime supplies execution, history, persistent variables, and limits; the model selects each next code action. This four-step path is not mandatory: a different observation could lead it to inspect other messages, repair code, or use another decomposition. Name matching is sufficient for this toy fixture, not a general guarantee of finding every update. A local deterministic fixture check confirmed candidate indices `[0, 2]` and two workshop-thread messages; no sub-LM response was generated or verified, and no paid model request occurred.
+
+#### How does this loop compare with ReAct on the same task?
+
+The outer feedback structure is shared: model decision, runtime action, returned observation, then another model decision. RLM does not introduce feedback where ReAct lacks it. In the course's installed DSPy implementations, ReAct selects a tool name and arguments; RLM generates code for a persistent interpreter that can access externalized inputs and invoke sub-LMs. These implementation differences illustrate the methods without defining universal restrictions on ReAct. [Mechanisms and implementation references](references.md#rlm-react-and-the-lecture-5-demo)
+
+Using the same three-message inbox and current-venue question, suppose a ReAct agent has a mentor-defined `search_emails(query)` tool:
+
+| Stage | ReAct example | RLM example |
+|---|---|---|
+| Find candidates | Select `search_emails("Gates")`; receive E1 and E3 | Generate code to filter the environment's `emails` variable and print E1 and E3 |
+| Resolve the workshop update | Select `search_emails("Agent workshop")`; receive E1 and E2; the root model reads the update | Generate code to collect E1 and E2, call `llm_query` on that thread, and print its current-venue finding |
+| Check the seminar | Retrieve its thread and interpret it in the root model | Inspect its thread through code and optionally delegate semantic extraction to a sub-LM |
+| Finish | Produce the answer through the implementation's finish/output mechanism | Call `SUBMIT` with the requested output fields |
+
+Both possible paths exclude the workshop that moved to Zoom. The tool, traces, and model responses here are illustrative and were not executed. Reading messages directly in the ReAct root model and delegating semantic work in RLM are choices in this comparison, not unavoidable behavior: ReAct can be given code-execution or model-calling tools, and RLM's root model can interpret passages it prints.
+
+The important RLM design combination is externally stored input, model-directed programmatic inspection/decomposition, and model subcalls for selected subproblems. Code execution alone does not establish this design. A ReAct-style outer loop can use these mechanisms, so the categories overlap. Neither approach universally guarantees lower cost, fewer iterations, or greater accuracy.
+
+## What is Temporal, and what does Lecture 5 use it for?
+
+Temporal is a general-purpose **durable execution platform**. It coordinates multi-step programs so they can handle retries, long waits, and worker failures using a recorded execution history. In this lecture it supplies execution reliability around existing DSPy components. ReAct/RLM describe model interaction or inference strategies; Temporal supplies infrastructure for running work across failures and time. These responsibilities can be combined. [Temporal references and course example](references.md#temporal-and-durable-execution)
+
+| Component | Responsibility | Lecture example |
+|---|---|---|
+| Workflow | Replay-safe orchestration code: sequence, branches, waiting, and activity scheduling | `CalendarWorkflow` orchestrates extraction, emoji selection, and calendar insertion |
+| Activity | A unit of external or nondeterministic work; retryable according to policy | `extract_event`, `select_emoji`, `add_to_calendar` |
+| Worker | Application-side process/component that polls task queues and runs workflow/activity code | A Python `Worker` registers the calendar workflow and activities |
+| Temporal Service | Records history and coordinates tasks, timers, and retries | The notebook starts a local development service and UI |
+
+The notebook's Part 3 shows three related examples:
+
+1. **Durable calendar workflow.** Reuse DSPy modules to extract event details and select an emoji, then call tinycal. If no event is found, return early. Each activity has a one-minute start-to-close timeout and an explicit retry policy with at most five attempts.
+2. **Retry a flaky activity.** A replacement emoji activity deliberately fails on attempts one and two, then proceeds on attempt three. Temporal coordinates retries instead of requiring a bespoke retry loop around every workflow step.
+3. **Wait across a worker restart.** `ReminderWorkflow` runs a child calendar workflow, waits using `workflow.sleep`, and returns reminder text. The demo requests a 20-second wait, cancels the worker task after a 10-second client-side delay, then starts a replacement worker. It is intended to show that recorded calendar/LLM results are reused and the workflow can finish. It returns a reminder string; it does not demonstrate delivering an external notification. The service remains available in this worker-restart example.
+
+Recovery uses **event-history replay**, not a snapshot of arbitrary Python process memory. Workflow code runs again against recorded events to reconstruct its state. Activities whose completion/results are already recorded are not re-executed merely because the workflow replays. Workflow orchestration must therefore be deterministic with respect to its history: place LLM calls and ordinary external I/O in activities, and use replay-safe workflow APIs for timers.
+
+An activity can still execute more than once when retried, including if an external write succeeds before its completion is recorded. Calendar insertion needs business-level idempotency for that failure window. The demo's comment about one meeting after the timer/worker restart is not a universal exactly-once guarantee for external side effects.
+
+"Workflow" here is a Temporal execution abstraction. It can host an adaptive agent: obtain model decisions through activities, record their outputs, and branch accordingly. Replay determinism does not require the model's original output to be predictable. As an engineering comparison, DSPy emphasizes expressing/optimizing model modules, LangGraph expresses state and control flow as a graph, and Temporal emphasizes durable execution; their capabilities overlap and this is not an exclusive product taxonomy.
+
+The notebook source and official documentation were inspected for this explanation. No calendar activity, retry demo, worker-recovery demo, or model request was executed in this exchange. Earlier local-service startup checks establish environment readiness only.
+
+### How can I summarize Temporal briefly and in detail?
+
+The learner proposed "a workflow-control component built around workflows and activities." That captures its orchestration abstractions. Add **durable execution** to distinguish the full platform from an ordinary in-process workflow controller. [Mechanisms and primary sources](references.md#temporal-and-durable-execution)
+
+**Short reference summary:** Temporal is an open-source durable execution platform. Developers express a process as workflow code that orchestrates activities; persisted event history, task scheduling, retries, and timers let the process recover and continue across worker failures and waits.
+
+**Detailed reference summary:**
+
+| Component | Meaning |
+|---|---|
+| Workflow | Replay-safe code defining sequencing, branching, loops, and waiting; deterministic relative to recorded history |
+| Activity | External or nondeterministic work, such as a model/API call or database operation; retryable according to policy |
+| Worker | Application-side code execution: polls tasks, runs workflow/activity definitions, and reports results |
+| Temporal Service | Coordinates task dispatch, retries, timers, and persisted execution history |
+
+Recovery reconstructs workflow state by replaying history. A recorded completed activity's result is reused during replay; an incomplete or failed activity may be retried. This does not restore arbitrary process memory or guarantee exactly-once external writes. Place model calls and ordinary I/O in activities, and make retryable writes idempotent.
+
+In the course's calendar example, recorded event-extraction results can be reused after worker recovery while execution proceeds to later calendar/timer steps. This is a description of the intended mechanism, not a new execution result. In an agent system, Temporal supplies execution reliability around the model/tool steps; agent strategy and harness design determine the decision process. The service coordinates execution while application workers run the code.
+
+These are mentor reference summaries requested during L05, not a weekly reflection or independent learner demonstration. No notebook task, service, or model request was run for this summary.
+
+### Is Temporal a technology, software product, running service, or SaaS?
+
+Treat Temporal first as a concrete **open-source backend infrastructure platform for durable execution**. The underlying idea, software implementation, running deployment, and managed offering are different naming levels, not mutually exclusive descriptions. [Product forms and adoption sources](references.md#temporal-product-forms-and-production-adoption)
+
+| Name | Meaning |
+|---|---|
+| Durable execution | The general execution approach: preserve progress and recover execution using recorded state/history |
+| Temporal | The particular platform/product ecosystem implementing this approach |
+| Temporal Server | The open-source server software; the repository lists the MIT license |
+| Temporal Service | A deployed backend comprising server services plus persistence and visibility stores; the term does not imply a vendor-hosted SaaS |
+| Temporal SDK | Language libraries used to implement clients, workflows, activities, and workers; the course imports `temporalio` |
+| Temporal Cloud | The official commercial managed service; an alternative to operating the backend yourself |
+
+A useful deployment analogy is a database product versus a running database service versus a vendor-managed database offering. This compares delivery forms, not functionality. Self-hosting open-source software still entails infrastructure and operational costs; using Temporal does not inherently require purchasing Temporal Cloud.
+
+There is first-party evidence of established production adoption. Datadog's October 29, 2024 engineering episode description says it started using Temporal in 2020 for an internal software-delivery platform and expanded its use, including supporting Workflow Automation. Coinbase's December 14, 2022 notification-platform engineering article describes per-user workflows executed on Temporal. These support an assessment that Temporal is an established option in durable workflow infrastructure. They do not establish market share, universal adoption, or a mandatory industry standard. The pages' relevant text was inspected; embedded videos were not watched.
+
+The official L05 notebook calls `WorkflowEnvironment.start_local(...)` to launch a **local development service**, imports the Python SDK, and runs a local worker. This setup does not require a Temporal Cloud account or subscription. That is the notebook's configuration, not a fresh assertion that its service or kernel is currently running. This follow-up is terminology and source review; no service, account, or model request was started.
+
+#### How does Temporal compare with Airflow?
+
+The learner correctly recognized Temporal as deployable open-source infrastructure, comparable to Airflow at that product/category level. Refine the proposed distinction of "complex orchestration versus persistent workflows": **both orchestrate workflows, retain execution state, and support retries**. The comparison concerns emphasis and execution model, not the presence or absence of persistence. [Primary comparison sources](references.md#airflow-versus-temporal)
+
+| Aspect | Airflow | Temporal |
+|---|---|---|
+| Typical emphasis | Scheduling and managing task dependencies, especially batch-oriented data/ML pipelines | Durable execution of application/business processes across failures and waits |
+| Programming/execution model | A DAG with tasks and dependency relationships; task/DAG state is tracked in the metadata database | Workflow control flow written in code, with activities, timers, and recorded event history |
+| Recovery distinction | Track task instances and schedule/retry work at task boundaries | Replay workflow history to reconstruct orchestration state and reuse recorded activity results; activities may be retried |
+| Illustrative scenario | Daily extraction, transformation, and warehouse loading | An order process waiting for payment or an agent task waiting for approval and resuming later |
+
+These examples are mentor illustrations and engineering tendencies, not exclusive capability limits. Current Airflow documentation also covers event-triggered and agentic/LLM workloads; Temporal can coordinate data pipelines. Complexity does not separate them, and Temporal does not restore arbitrary Python process memory or automatically checkpoint the internals of every activity. In this course, Temporal demonstrates durable execution around the calendar/model steps, rather than a general product benchmark or a claim that Airflow cannot run agents.
+
+### Where does Temporal fit relative to the model, workflow framework, and agent harness?
+
+Lecture 5's **Framework Landscape** (PDF pages 14-16) has two dimensions. Its Model -> Workflow/Compound AI System -> Agent line is a spectrum of control, not a mandatory software call stack. Reliability and observability are cross-cutting support categories. Temporal appears in Reliability; Langfuse and MLflow appear in Observability. The later observability section also discusses LangSmith. [Verified lecture and current primary documentation](references.md#lecture-5-framework-landscape-and-agent-harnesses)
+
+```mermaid
+flowchart TB
+    T["Reliability: Temporal<br/>History, retries, timers, recovery"]
+    O["Observability<br/>MLflow, LangSmith, Langfuse"]
+    subgraph S["Spectrum of control, not a mandatory call chain"]
+        direction LR
+        M["Model access<br/>OpenAI API, Anthropic API, LiteLLM"]
+        W["Workflows and compound systems<br/>DSPy, LangGraph"]
+        A["Agent harnesses<br/>mini-SWE-agent, OpenHands, Pi, OpenClaw"]
+        M --- W --- A
+    end
+    T -.-> W
+    T -.-> A
+    O -.-> M
+    O -.-> W
+    O -.-> A
+```
+
+This is a mentor reconstruction of the lecture's categories. Dashed links denote possible supporting integrations, not a claim that the listed harnesses use Temporal by default or that every system requires every product.
+
+| Category | Main responsibility | Example in the lecture |
+|---|---|---|
+| Model access | Send inputs to a model and receive generated text or structured requests | OpenAI/Anthropic APIs; LiteLLM as an access abstraction |
+| Model-program framework | Define model inputs/outputs, compose modules, and optimize against a metric | DSPy signatures, modules, and optimizers |
+| State/control-flow framework | Express shared state, nodes, branches, and loops | LangGraph; it can implement both workflows and agents |
+| Agent harness | Integrate a model-driven loop with tools, context/history, memory, and execution behavior | mini-SWE-agent, OpenHands, Pi, OpenClaw in the lecture's examples |
+| Durable execution | Coordinate work across failures and waits, with history, retries, and timers | Temporal |
+| Observability | Inspect traces and failures; measure behavior such as latency and cost | MLflow, LangSmith, Langfuse |
+
+The harness section (PDF pages 78-89) focuses on concrete design choices such as tool interfaces, history representation, context management, and stateful versus independent command execution. Its examples are lecture snapshots rather than claims about every project's current release. A harness supplies policies and runtime mechanisms; the model selects actions within those bounds. Temporal's distinct concern is scheduling and resuming the recorded execution. For example, a harness can choose to query a calendar, an activity can perform that query, Temporal can coordinate retries/recovery, and a trace can expose the sequence for debugging. This composition is a mentor illustration; it was not implemented or run.
+
+ReAct and RLM belong to the strategy/design-pattern dimension, not a separate deployment tier. DSPy implements them as modules, and a harness can adopt these methods. Capabilities overlap across products: DSPy and LangGraph can build agents; current LangGraph documentation explicitly includes persistence and durable execution. Temporal can host a model-directed agent loop, but adding it requires explicit workflow/activity boundaries and does not automatically persist an arbitrary process's internal agent state. Choose recovery granularity deliberately.
+
+The inspected official notebook demonstrates DSPy -> LangGraph -> Temporal reuse; it does not establish a universal stack in which every harness must use all three. No new dependency, agent, infrastructure service, or model request was started for this comparison.
+
+## How do observability and reliability differ and support each other?
+
+**Reliability** is a system property: consistently delivering the behavior users require, including relevant correctness, availability, and timing expectations. **Observability** is the capability to understand system behavior and investigate problems through emitted signals such as logs, metrics, and traces. One is an outcome to achieve; the other helps measure, diagnose, and improve that outcome. [Primary definitions and mechanisms](references.md#observability-and-reliability)
+
+| Aspect | Observability | Reliability |
+|---|---|---|
+| Main question | What happened, where, and what evidence explains it? | Does the system consistently deliver the required result despite failures? |
+| Typical capabilities/mechanisms | Instrumentation, correlated traces, metrics, logs, dashboards, and alerting | Failure handling, durable state, bounded retries/timeouts, idempotency, redundancy, validation, and testing |
+| Calendar-agent example | Inspect the model/tool calls, failed attempts, inputs/outputs where instrumented, and latency | Retry a transient failure, recover a stopped worker's workflow, and prevent duplicate calendar writes |
+| Relationship | Supplies evidence for diagnosis and checking improvements | Uses that evidence and engineering mechanisms to improve user-visible behavior |
+
+For the course's flaky emoji activity, Temporal can coordinate retry attempts and continue after a successful result. Observability can reveal that the first two attempts failed, what errors they returned, and how much latency retries added. If retries recover the task, the trace still matters: repeated transient failures may increase latency or signal a degrading dependency. This is an explanation of the example, not an observed new run.
+
+A useful improvement cycle is: observe a rise in failed/slow tasks, investigate the traces, change the relevant timeout/retry or implementation behavior, and check user-facing success and latency again. An observability platform does not itself make every failure recoverable; recovery mechanisms alone do not provide sufficient diagnosis of every failure. Temporal also exposes execution history and operational visibility, so products can serve both concerns. Its event history is used to reconstruct workflow execution, beyond a diagnostic-only log.
+
+For agents, distinguish **execution reliability** from **semantic task correctness**. A workflow can finish with every API returning success while the model extracts the wrong meeting date. Traces can supply evidence for investigation, but business checks and evaluations are needed to detect and reduce such mistakes. Temporal's durable execution alone does not make that answer correct. Metrics such as HTTP success or workflow completion should therefore not be substituted for validated task success.
+
+This explanation connects the lecture's cross-cutting Reliability and Observability categories. No observability integration, monitoring experiment, agent task, or model request was executed, and this answer is not independent learner evidence.
+
+## Lecture 5 reflection and reference summary
+
+### Learner reflection
+
+On November 26, the learner reported finishing the L05 video and summarized the main takeaways as follows (English translation):
+
+> I learned what AI engineering is, what a harness is, what workflow frameworks are, and some orchestration and telemetry frameworks.
+
+This identifies the lecture's organizing topics. Earlier discussion also provides learner evidence of recognizing Temporal as deployable open-source infrastructure and identifying its workflow/activity abstractions. Detailed implementation, failure recovery, and evaluation choices have not been independently assessed. The learner supplied this reflection before the AI reference summary below.
+
+### AI reference summary
+
+1. **AI engineering connects data, system design, and evaluation.** Define the task and success criteria, assemble the model/tool system, and use evidence to improve its quality, cost, latency, and reliability. A model choice alone does not establish an effective system.
+2. **Workflow frameworks make model-based programs explicit.** DSPy supplies signatures, composable modules, and metric-driven optimizers. LangGraph expresses shared state, nodes, edges, branches, and loops. Both can implement agents; the lecture's framework categories are not exclusive capability boundaries.
+3. **An agent harness organizes the running agent.** It integrates the model-driven loop, tools, context/history, memory, and execution behavior. The lecture's mini-SWE-agent, OpenHands, Pi, and OpenClaw examples illustrate different tradeoffs. ReAct and RLM are strategies a framework or harness can implement, rather than separate deployment layers.
+4. **Temporal contributes durable execution.** Workflow code orchestrates activities; application workers execute them; the service coordinates history, tasks, retries, and timers. Replay reuses recorded completed activity results. External writes still need idempotency when retries can repeat effects.
+5. **Observability supplies evidence for reliability work.** Logs, metrics, and traces help identify failures, latency, and model/tool behavior. Recovery mechanisms keep execution progressing; business validation and evaluation establish whether the agent actually performed the requested task. A completed workflow or successful HTTP response alone does not prove semantic correctness.
+
+### Evidence and next action
+
+The video and learner reflection are recorded. The mentor set up and checked the notebook environment earlier, but has not independently reviewed learner-authored notebook work or verified a complete learner-run demonstration. A saved local notebook contains outputs; that fact alone is not an implementation assessment. M3 remains In Progress for its applied gates, without an invented score or an additional coding exercise for this wrap-up.
+
+The notebook kernel was shut down through its Jupyter control channel; it returned `shutdown_reply`. The associated Temporal child process exited, and the separately started course tinycal process was sent SIGTERM. Desktop application control timed out, and the OS denied assistive access, so saving any unsaved editor changes and closing the VS Code tab remain a manual UI step. The saved notebook and environment remain in the ignored local working copy.
+
+Next: L06, Agent Design Patterns & Scaffolds. The official schedule now links a [video](https://youtu.be/JC_pLC5EX_w), verified November 26; it was not played by the mentor. Keep one viewing question in mind: **For the same task, when is a predefined workflow sufficient, and when does letting the model choose the next step earn its cost?** The [Week 4 references](../week-04/references.md) contain the resource links and a short selected reading for after the video.
+
+## Where does the Lecture 5 notebook run, and is it started?
+
+Python runs locally in the lecture working copy's `.venv`, using the registered Python 3.12 kernel in VS Code. Model inference is remote through OpenRouter. A separate browser-based JupyterLab server is not needed for the VS Code notebook workflow.
+
+At the November 25 status check, tinycal was listening on localhost port 8765 and returned HTTP 200. No active IPython/Jupyter kernel process or Temporal UI on port 8233 was observed. Earlier verification kernels and the Temporal smoke-test server had been shut down. The notebook was reopened through the VS Code CLI. Select the course kernel and execute the first setup cell to start interactive execution; the notebook's Temporal setup cell starts its own development server. This is a runtime-status snapshot, not evidence of completing notebook exercises. [Setup instructions](lecture-05-setup.md)
