@@ -145,6 +145,12 @@ Official placement: week 4, Mon Oct 12, 2026. Roadmap: M4.
 - Slides: [Slides](https://web.stanford.edu/class/cs329z/slides/lecture06.pdf) — reachable.
 - Video: [Video](https://youtu.be/JC_pLC5EX_w) — now linked in the official schedule, rechecked November 26; endpoint and recording title verified, playback untested.
 
+November 26 workflow/agent question: direct download of the 10,861,442-byte official PDF succeeded despite the web reader's size limit. The deck has 86 pages; PDF page 12 (Workflows vs Agents) was extracted, rendered, and visually inspected. This is selected-page source review, not full-deck review or mentor video playback. The learner reports watching L06. [Reviewed definitions and references](../lectures/week-04/references.md#workflow-versus-agent)
+
+November 26 reasoning/acting source check: PDF page 42 is titled CRITIC but its footer cites `2310.01798`, which identifies *Large Language Models Cannot Self-Correct Reasoning Yet*, also used on the preceding limitations slide. The primary CRITIC paper is [CRITIC: Large Language Models Can Self-Correct with Tool-Interactive Critiquing](https://arxiv.org/abs/2305.11738). Record this source-title mismatch without treating the two papers as interchangeable. [Selected-page checks and method references](../lectures/week-04/references.md#reasoning-acting-patterns-and-trajectory)
+
+November 27 Pi case-study check: the slide-linked `pi.dev/docs/latest/cli` and `/compaction` URLs redirect to `docs.pi.dev/latest/`. Pages 77-83 were rendered and visually inspected. The current project documentation describes project trust before loading project resources, alongside tool execution with process permissions; qualify the slides' "no safeguards" shorthand rather than treating it as an exhaustive, permanent description. The website's GitHub tree links were blocked by the web reader, while the official raw README was accessible. No installation or Pi run was performed. [Pi references](../lectures/week-04/references.md#pi-case-study)
+
 **Official readings**
 
 - [ReAct: Synergizing Reasoning and Acting in Language Models](https://arxiv.org/abs/2210.03629) — reachable.
@@ -162,7 +168,7 @@ Official placement: week 4, Mon Oct 12, 2026. Roadmap: M4.
 Official placement: week 4, Wed Oct 14, 2026. Roadmap: M4.
 
 - Slides: [Slides](https://web.stanford.edu/class/cs329z/slides/lecture07.pdf) — reachable.
-- Video: not linked in the checked schedule.
+- Video: [How AI Agent Memory Works: MemGPT & Memory Types](https://youtu.be/qh5tP6PBZ6U) — now linked in the official schedule, rechecked November 27. The endpoint and title identify CS329Z Lecture 7 with Michael Ryan; playback and full viewing were not performed by the mentor. Learner viewing is Not Started.
 
 **Official readings**
 

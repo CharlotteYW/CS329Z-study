@@ -31,6 +31,8 @@ When the learner finishes a study week's material, ask what they learned and inv
 
 After answering a study question, add a concise English question and answer to `lectures/week-NN/questions-and-answers.md` for the learner's current study week. Merge repeated questions into the existing entry. Capture the distinction or example that will help the learner recall the answer. Add cited papers and primary sources to that week's `references.md` with direct links and a short note on why each source matters. Link relevant answers to their references. Label previews of later material so they do not imply completed study.
 
+Include the instructor's section-level recap slides and closing lecture summary in that lecture's review notes, with verified slide/page references. Use faithful English paraphrases, retain qualifications, and label instructor takeaways separately from mentor clarifications and the AI reference summary. Keep these recaps concise and easy to find. They supplement, rather than replace, the learner-first reflection process.
+
 Put the week's selected readings and comparison tasks at the top of `references.md`. Specify the relevant sections or figures, what to compare, and a suggested time budget. Label other citations as references for review so the learner can see the week's workload at a glance.
 
 ## Curriculum and source discipline
