@@ -1,0 +1,20 @@
+{
+  "prepared_on": "2026-11-28",
+  "layout": "Official starter files tracked directly in the study repository; local Git metadata archived outside the tracked tree.",
+  "assignments": {
+    "hw1": {
+      "path": "assignments/hw1-agent-harness",
+      "upstream": "https://github.com/cs329z/assignment1-harness",
+      "revision": "95f4cb7bfe28a27a7cf5bcb1eccb1aaaf1385eb3",
+      "handout_version": "26.1.0",
+      "python": "3.12.13"
+    },
+    "hw2": {
+      "path": "assignments/hw2-agent-evaluation",
+      "upstream": "https://github.com/cs329z/assignment2-evals",
+      "revision": "3a649d8da0dc6cb0422e6ce7ce7068c3b98be1db",
+      "handout_version": "26.1.0",
+      "python": "3.12.13"
+    }
+  }
+}

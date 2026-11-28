@@ -20,10 +20,10 @@ Raw per-link status, redirects, and titles: [link-checks.json](link-checks.json)
 | Syllabus and schedule | [Course](https://cs329z.stanford.edu/) | Public; explicitly Fall 2026 |
 | Policies and coursework | [Logistics](https://cs329z.stanford.edu/logistics) | Public |
 | Project specification | [Project](https://cs329z.stanford.edu/project.html) | Public |
-| HW1 starter | [assignment1-harness](https://github.com/cs329z/assignment1-harness) | Public; README inspected |
-| HW1 specification | [Handout](https://github.com/cs329z/assignment1-harness/blob/main/cs329z_assignment1_harness.pdf) | File page reachable; read fully before implementation |
-| HW2 starter | [assignment2-evals](https://github.com/cs329z/assignment2-evals) | Public; README inspected |
-| HW2 specification | [Handout](https://github.com/cs329z/assignment2-evals/blob/main/cs329z_assignment2_evaluation.pdf) | File page reachable; read fully before implementation |
+| HW1 starter | [assignment1-harness](https://github.com/cs329z/assignment1-harness) | Public; README rechecked November 28; [local setup](../assignments/README.md) prepared at a recorded revision |
+| HW1 specification | [Handout](https://github.com/cs329z/assignment1-harness/blob/main/cs329z_assignment1_harness.pdf) | Version 26.1.0 cached with starter; setup/constraints reviewed, full review remains before implementation |
+| HW2 starter | [assignment2-evals](https://github.com/cs329z/assignment2-evals) | Public; README rechecked November 28; [local setup](../assignments/README.md) prepared at a recorded revision |
+| HW2 specification | [Handout](https://github.com/cs329z/assignment2-evals/blob/main/cs329z_assignment2_evaluation.pdf) | Version 26.1.0 cached with starter; setup selections reviewed, full review remains before implementation |
 | Paper presentation | [Handout](https://web.stanford.edu/class/cs329z/assignments/paper_video.pdf) | PDF reachable; review rubric before recording |
 | Enrolled-student recordings | [Canvas](https://canvas.stanford.edu/courses/233286) | Restricted; redirects to login |
 | Course discussion | [Ed Discussion](https://edstem.org/us/courses/106723/discussion) | App shell reachable; course content not inspected |
@@ -168,7 +168,9 @@ November 27 Pi case-study check: the slide-linked `pi.dev/docs/latest/cli` and `
 Official placement: week 4, Wed Oct 14, 2026. Roadmap: M4.
 
 - Slides: [Slides](https://web.stanford.edu/class/cs329z/slides/lecture07.pdf) — reachable.
-- Video: [How AI Agent Memory Works: MemGPT & Memory Types](https://youtu.be/qh5tP6PBZ6U) — now linked in the official schedule, rechecked November 27. The endpoint and title identify CS329Z Lecture 7 with Michael Ryan; playback and full viewing were not performed by the mentor. Learner viewing is Not Started.
+- Video: [How AI Agent Memory Works: MemGPT & Memory Types](https://youtu.be/qh5tP6PBZ6U) — now linked in the official schedule, rechecked November 27. The endpoint and title identify CS329Z Lecture 7 with Michael Ryan; playback and full viewing were not performed by the mentor. The learner reported finishing the video and supplied a reflection on November 27; an aided historical-labeling check on November 28 completes lecture review. Independent application remains unassessed. [Review evidence](../lectures/week-04/questions-and-answers.md#lecture-7-reflection-and-reference-summary)
+
+November 27 requested-summary review: the official PDF downloaded successfully with system curl after the bundled Python downloader's certificate-chain error. The file is 21,846,259 bytes and 103 pages, cached only in the ignored working directory. Section-title text and selected conceptual/architecture/evaluation/challenge pages were inspected; selected figures and recap pages 22, 66, 94, and 102 were rendered and visually reviewed. This is not full-deck visual review, mentor playback, or evidence of learner completion. [Guide and instructor recaps](../lectures/week-04/lecture-07-recap.md) · [Sources and scope](../lectures/week-04/references.md#lecture-7-summary-and-recap-sources)
 
 **Official readings**
 

@@ -377,3 +377,167 @@ This identifies the lecture's main structure. Earlier questions also provide spe
 **Instructor recaps:** at the learner's request, the [section recap notes](lecture-06-recap.md) preserve the instructor's workflow, reasoning/action, context, Pi, and whole-lecture summaries with PDF-page links and separate mentor clarifications. This note-taking preference is also recorded in `AGENTS.md` for future lectures.
 
 **Next lecture preview:** L07, Agent Memory Architectures. The official schedule's [video](https://youtu.be/qh5tP6PBZ6U) and title were checked on November 27 without playback; L07 viewing is not yet reported. This is a lecture-level reflection, not completion of the M4 application gates or the entire study week's materials.
+
+## What is the main learning path through Lecture 7?
+
+**Requested guide, November 27:** the learner subsequently reported finishing the L07 video and supplied an own-words reflection on November 27. The AI reference summary and November 28 aided comprehension check are recorded below. L07 is Completed for lecture review; independent implementation/application remains unassessed. The [viewing guide and instructor recaps](lecture-07-recap.md) organize the lecture into motivation, memory types, architectures, evaluation, and challenges. [Reviewed sources](references.md#lecture-7-summary-and-recap-sources)
+
+The learner explicitly requested that the organized guide also be shown directly in the conversation. The chat explanation follows the five lecture sections with comparison tables and a hypothetical slow-query investigation example; saving the guide and presenting it are both part of this request.
+
+The central engineering problem is deciding **what to remember, when to write/retrieve it, and how to maintain it**. Working memory is the current reasoning context; episodic memory records experiences; semantic memory stores facts/preferences; procedural memory supplies skills and instructions. These roles are separate from storage choices such as files, databases, and graphs, and from the parametric-versus-context distinction.
+
+Four architecture patterns organize the examples: learn reusable procedures from experience (Voyager/AWM/Skills), manage tiers of active and external memory (MemGPT/MemoryOS), consolidate experience into reflections (Reflexion/Generative Agents), and maintain or prepare memories (Sleep-time Compute/A-Mem/Mem0). The instructor's page 66 recap compares stored content, write/read timing, and tradeoffs; these patterns can be combined. The learner highlighted this recap as useful and asked whether it was saved: the [architecture recap table and examples](lecture-07-recap.md#architecture-recap-pdf-page-66) are preserved in the review guide, with a compact recall cue. These are architecture patterns, distinct from the four memory-content categories.
+
+Evaluation should be realistic, long-context, challenging, and verifiable. The course compares LoCoMo, PersonaMem, LongMemEval-V2, and MemoryArena, progressing from conversational/profile recall toward environment experience and memory-guided tasks. Retrieving correct evidence and using it correctly are distinct failure points. Open problems include retaining versus forgetting, privacy/trust/user control, and inappropriate personalization.
+
+The incident examples in the guide are mentor illustrations. No agent, model, memory store, or benchmark was run. This requested topic summary does not establish learner mastery or replace the learner-first final reflection.
+
+### How do Voyager, AWM, and Skills differ in learning and reusing procedures?
+
+They share an external procedural-memory role, but operate at different levels. **Voyager and AWM specify experience-to-memory mechanisms; Agent Skills specifies a packaging and loading format whose authoring process can vary.** In these examples, learning means accumulating reusable external knowledge/code, without requiring model-weight updates. [Selected methods and format sources](references.md#voyager-awm-and-skills-learning-processes)
+
+| Approach | Experience or authoring input | Saved artifact | Subsequent use |
+|---|---|---|---|
+| Voyager | Curriculum-selected Minecraft tasks, executed code, environment feedback/errors, and model-based success checking | Reusable executable code with a description; description embeddings index the skill library | Retrieve related code into context to reuse/compose in later programs |
+| AWM | Existing task trajectories offline, or trajectories judged successful during online task solving | Generalized subroutines: descriptions and observation/action steps with variable slots | Add workflow memory to prompts to guide subsequent actions |
+| Agent Skills | Human-authored expertise, AI-assisted authoring, or procedures extracted from experience | A `SKILL.md` package with optional references, scripts, and assets | Discover metadata, activate full instructions, then load/run supporting resources as needed |
+
+Voyager iterates **task -> code -> execution/feedback -> revision -> model-judged success -> library**. That success check is fallible, not a formal proof. AWM iterates **trajectory -> common subroutine abstraction -> prompt memory -> later task**; offline induction happens before use, while online induction updates memory between tasks. In the original offline setup, all induced workflows for the relevant website enter memory, rather than requiring a Voyager-like vector lookup. AWM guidance is not automatically a compiled workflow engine.
+
+For Skills, **author/refine/test -> package -> discover/load/use** is a useful authoring/use sketch, not a mandatory learning algorithm specified by the format. Loading a skill does not automatically produce or update one. The shared word "skill" also differs: Voyager's code-library item is not inherently an Agent Skills-format directory. Their acquisition and packaging ideas can be combined by an implementation.
+
+Course examples are Minecraft skills, web-navigation subroutines, and skill instruction packages, respectively. These pipelines are explanatory; no agent, training run, skill package, or retrieval experiment was executed. The learner requested this distinction; independent understanding remains unassessed.
+
+### What does snippet mean on the Skills slide?
+
+**Snippet** means a short excerpt or compact piece of text/code. On L07 PDF page 40, it means the short **skill-catalog description** placed alongside the system prompt. The enlarged spreadsheet entry shows a name and a description of capabilities and when to use them. The small `bigquery`, `docx`, `pdf`, `xlsx`, and other boxes represent those compact entries, rather than complete instruction files. [Inspected Skills slides](references.md#voyager-awm-and-skills-learning-processes)
+
+This is the metadata/discovery layer previously discussed. The same figure then shows a PDF request triggering a tool-based read of `pdf/SKILL.md`, followed by its referenced `forms.md`. Full instructions arrive through those reads, not from the initial snippets. Here, snippet is descriptive vocabulary, not an additional agent algorithm or a requirement that its content be executable code. The displayed paths and shell calls are part of the slide example; none was executed in this workspace.
+
+### What kind of framework is MemGPT, and how does it manage memory?
+
+MemGPT is the paper's **memory-oriented agent system/architecture** around a fixed-context LLM. It combines hierarchical storage, memory-operation functions, and runtime control. The model chooses memory operations; the runtime executes them and constructs subsequent inputs. Its virtual-memory analogy concerns moving information between active context and external stores, not increasing the base model's native context limit. [Original methods, lecture figure, and project identity](references.md#memgpt-architecture-and-memory-control)
+
+| Component in the original design | Role |
+|---|---|
+| Main context | The complete input currently available to the LLM: static system instructions, editable working context, and a FIFO message queue |
+| Working context | A bounded editable text block for important user/persona facts and other persistent guidance; this is a component of main context, not a synonym for the entire prompt |
+| FIFO queue | Recent user/assistant/system/function messages, with a recursive summary of earlier evicted messages |
+| Recall storage | Conversation/message history written by the queue manager and searchable through functions |
+| Archival storage | External text/documents/knowledge, searchable and writable through functions; the lecture illustrates vector search |
+| Function executor / queue manager | Validate/execute calls, return results/errors, maintain history, and manage memory pressure and queue eviction |
+
+A hypothetical service-migration assistant could keep the target database and zero-downtime constraint in working context, retain the conversation in recall storage, and store detailed migration material in archival storage. When later asked why a backfill strategy was chosen, it can search the relevant external record, bring evidence into the active queue, and answer. This is a mentor example, not an executed memory write or a verified project fact.
+
+The loop is **event -> assemble limited main context -> model decision -> memory function -> runtime updates/results -> subsequent inference or user response**. Original MemGPT supports chained calls before returning control. Under context pressure, the queue manager warns the model, then evicts/summarizes older queue messages as needed; retained history can be searched again. Every individual inference still has a finite context budget.
+
+Compared with a simple fixed retrieve-then-answer pipeline, MemGPT makes memory selection and editing part of the agent loop, including editable core context and history management. RAG-style retrieval can implement part of archival access; the approaches are compatible. This mechanism does not require changing model weights. The related open-source project developed under Letta; its current README points to newer source, so original paper functions should not be presented as a verified current SDK interface. No installation, agent run, model call, memory mutation, or benchmark was performed. Independent learner application remains unassessed.
+
+### How does MemoryOS compare with MemGPT?
+
+They share the **tiered-memory** idea: retain selected active information, keep additional information externally, and assemble useful evidence for finite-context generation. Their organization and control policies differ. [MemoryOS methods and lecture diagram](references.md#lecture-7-summary-and-recap-sources)
+
+| MemoryOS tier | Stored information and update policy |
+|---|---|
+| Short-term memory (STM) | Recent query/response/timestamp pages, with dialogue-chain metadata; a full queue moves its oldest page toward MTM using FIFO |
+| Mid-term memory (MTM) | Topic segments containing dialogue pages and summaries; relevance groups pages and segment heat supports retention, eviction, and further consolidation |
+| Long-term persona memory (LPM) | User/agent profiles, knowledge, and traits/preferences extracted or updated from selected material |
+
+The original paper's heat combines retrieval frequency, interaction volume, and recency; it is a retention/update heuristic, not a truth score. High-heat segments trigger LPM updates, while capacity pressure can evict low-heat segments. At query time, recent STM is combined with retrieved MTM material and LPM information. MTM retrieval first selects topic segments, then relevant pages within them. Storage, updating, retrieval, and generation are its four functional modules, separate from the three storage tiers.
+
+MemGPT emphasizes model-requested memory functions plus runtime queue control across main context and external recall/archival stores. MemoryOS makes the dialogue-memory organization, migration, retrieval, and persona-update pipeline more explicit, combining policies/thresholds with model-generated metadata and extraction. This is a difference in emphasis, not a claim that MemGPT lacks automated queue management or that MemoryOS avoids LLM decisions. Their tiers do not map one-to-one.
+
+For a hypothetical migration discussion, STM holds recent turns, MTM groups the migration topic's history, and LPM retains extracted durable project/user knowledge. Future answers select relevant material across these layers. This is an illustration; no memory was written or retrieved, and no benchmark/model comparison was run. The explanation does not establish universal superiority or independent learner application.
+
+### Does A-Mem use a dedicated LLM to manage memory?
+
+Yes at the **responsibility** level: A-Mem is an LLM-driven memory-management subsystem. Lecture PDF page 61 summarizes it as building an agent for memory management. This does not require training a separate memory-specialized model; using the same base model with different prompts is an architectural option. The memory remains external data, rather than newly learned model weights. [Selected methods and inspected diagrams](references.md#a-mem-and-mem0-memory-maintenance)
+
+The original method constructs notes containing interaction content, timestamp, generated keywords/tags/context, an embedding, and links. An embedding encoder and similarity search find related existing notes; the LLM judges meaningful links and whether to revise existing notes' context, keywords, or tags. Later queries retrieve relevant notes for the task agent. The contribution is content-aware organization and evolution of memory, with code/storage/search supporting the model's judgments. A dedicated responsibility need not imply a separate model deployment or an unrestricted action loop.
+
+### Is Mem0 similar to A-Mem, and what does its memory manager do?
+
+Yes: both use LLM judgments to maintain external memory. Their original mechanisms emphasize different operations. **A-Mem constructs and connects notes and evolves their contextual attributes; Mem0 extracts candidate facts and reconciles them with stored facts.** [Original methods and lecture diagrams](references.md#a-mem-and-mem0-memory-maintenance)
+
+In the original Mem0 pipeline, a new message pair, recent messages, and a conversation summary form the extraction input. An LLM produces candidate facts. For each candidate, vector similarity retrieves related existing memories; another model call selects **ADD, UPDATE, DELETE, or NOOP**, and runtime code applies the operation. Relevant stored memories can subsequently enter the answering model's context. These are inference-time operations, without requiring a newly trained memory model. Model reuse versus a separate deployment is a configuration choice.
+
+For an illustrative tutor: a new study-budget fact can be added; an expanded fact can update an existing record; an explicitly superseded budget can cause obsolete information to be deleted/replaced; a repeated unchanged preference can require no operation. The precise sequence is model-dependent, rather than a guaranteed mapping from each sentence to one database action. This is a mentor example, not an executed write or observed model output.
+
+Lecture PDF page 63 shows the base extraction/update pipeline. Page 64 shows the graph-enhanced design: entity/relationship extraction and conflict resolution. The original paper distinguishes base Mem0 from its graph variant, so a graph database is not inherent to every Mem0 configuration. Neither system's model judgments automatically guarantee factual correctness. These explanations do not establish independent learner application.
+
+### How do LoCoMo, PersonaMem, LongMemEval-V2, and MemoryArena differ?
+
+They evaluate different uses of memory, rather than four interchangeable scores or a universal difficulty ranking. Compare the **history source, requested output, evaluation protocol, and failure attribution**. [Selected methods and lecture comparison](references.md#memory-benchmarks-protocols-and-metrics)
+
+| Benchmark | History and task | What is tested | Scoring and limitation |
+|---|---|---|---|
+| LoCoMo | Long, dated, multi-session conversations between simulated people, with human verification/editing; answer questions about the history | Recall, cross-session synthesis, temporal reasoning, combining personal information with world knowledge, and recognizing unanswerable questions | The original QA setup uses normalized answer-overlap F1 and can separately measure retrieval recall; answering history questions does not demonstrate successful future actions |
+| PersonaMem | Simulated user-assistant histories with evolving profiles/preferences; choose the response appropriate at the query's time | Remembering facts and preference changes, their reasons, current personalized recommendations, and transfer to new situations | The course's main setting selects one of four responses; report selection accuracy. Recognizing a suitable response is distinct from independently generating and executing a plan |
+| LongMemEval-V2 | Many multimodal web-agent trajectories; gather compact evidence to answer manually curated environment-specific questions | Static states, dynamic changes, workflow knowledge, environment gotchas, and premise awareness | Sequential Insert calls build memory; Query returns bounded evidence to a fixed reader. Report answer accuracy and query latency. It tests experience-based question answering rather than new live-task completion |
+| MemoryArena | Interdependent multi-session tasks in shopping, travel planning, progressive search, and mathematical/physical reasoning | Acquire experience during earlier subtasks and use it to guide later actions or solutions under accumulated constraints | Environment-specific task Success Rate, subtask Progress Score, and, where used, soft constraint progress. End-to-end failures can also arise from planning, reasoning, or tool use |
+
+**LoCoMo:** a query can ask for one remembered event, require facts from different sessions, or depend on event ordering. Its adversarial category rewards recognizing that a question cannot be answered from the evidence. The original benchmark also includes event summarization and multimodal dialogue generation; it is not only a QA dataset. Finding the correct source turn and using it to answer are separate measurements/failure points.
+
+**PersonaMem:** the key temporal distinction is between a historically true preference and the user's current preference. In the lecture's food example, a later allergy and changed cuisine preference should affect a current recommendation. Recalling that the change occurred is different from incorporating it into a suitable response. Distractor options use outdated or irrelevant information. The multiple-choice protocol described here is the main lecture comparison, not a claim that the paper has no generative experiments.
+
+**LongMemEval-V2:** the lecture's WorkArena example asks why an employee search includes other employees; the remembered environment-specific default comparison operator explains the result. Other questions test button/layout facts, changes after actions, task steps, or assumptions about features that do not exist in that environment. The five abilities are broader than verbatim detail recall. The history can be much larger than a model input because the memory system returns selected evidence, not the complete trajectory collection. The original protocol fixes the reader and evidence budget to reduce downstream-model confounding; memory construction and evidence selection still matter.
+
+**Source qualification:** lecture page 86 describes LongMemEval-V2 as multiple-choice QA. The inspected original paper (Sections 3.2-3.3) includes true/false, multiple-choice, short-answer, and screenshot-grounded gotcha questions. Structured answers use normalized matching; free-form answers use an LLM judge. Preserve this broader scope rather than calling every item multiple choice. This is V2's environment-experience benchmark, not an assertion about the original LongMemEval's task taxonomy.
+
+**MemoryArena:** a shopping sequence first selects a camera body, then selects a compatible lens under a new constraint. A travel sequence must incorporate new participants while retaining earlier itinerary commitments. The test therefore couples memory, agent actions, and environment feedback across sessions. Success Rate follows each environment's full-task criterion; Progress Score averages the fraction of passed subtasks; soft Progress Score gives credit for the fraction of satisfied constraints within subtasks. Full success and partial progress answer different questions.
+
+Two useful protocol sketches:
+
+```text
+History-based QA / response selection:
+provided history -> context or memory system -> evidence -> answer/choice -> grade
+
+Interdependent task evaluation:
+subtask 1 -> actions/feedback -> retained memory
+         -> subtask 2 uses prior experience + new constraints -> ... -> task verification
+```
+
+**Instructor recap:** a useful benchmark should have realistic memory sources and queries, enough history to exercise memory, challenging distinctions, and verifiable outcomes. Longer histories alone do not imply greater practical validity. **Mentor engineering interpretation:** conversational recall, current-preference use, environment knowledge, and memory-guided task completion are separate test targets. When comparing memory implementations, hold the task model, tools, evidence/action budgets, and dataset fixed where possible; examine cost/latency and distinguish missing writes, retrieval misses, stale facts, incorrect evidence use, and non-memory execution failures. The lecture's page-85 filesystem/retrieval result changes the model too, so it does not isolate storage architecture.
+
+The mentor reviewed selected methods and figures; no benchmark, model, retrieval system, or task environment was run. These are explanations and course examples, not measured results or evidence of independent learner application.
+
+### What does "slight throttle" mean on the memory-security slide?
+
+The phrase on lecture PDF page 98 is **slight throttle**: a small amount of accelerator input, or gently applying the accelerator. Here, throttle refers to vehicle acceleration control. The diagram labels the benign output as moving forward with slight throttle, contrasted with an adversarial sudden-stop/full-braking output. It is an action label in a driving-agent example, not a memory architecture or algorithm name. [Slide and paper context](references.md#slight-throttle-and-memory-poisoning)
+
+The lecture uses the AgentPoison illustration to show that poisoned retrieved examples in memory or a knowledge base can influence an agent's actions. The important memory-design connection is the trustworthiness of retrieved experience, rather than the driving vocabulary itself. The figure was visually inspected and the paper abstract checked; no attack, vehicle control, or model experiment was performed.
+
+## Lecture 7 reflection and reference summary
+
+**Completed for lecture review, November 28:** video viewing, the learner's own reflection, the subsequent AI reference summary, and an aided current-state-versus-history comprehension check are recorded. Completion is limited to lecture review; M4's independent applied-evidence requirements remain open. [Instructor recaps](lecture-07-recap.md) / [Reviewed sources](references.md#lecture-7-summary-and-recap-sources)
+
+**Learner reflection, faithful English paraphrase:** the lecture explained why memory is needed, the types of memory, memory architectures and components and how memories are formed, how to evaluate a memory system, and the difficulties encountered when using memory.
+
+**Mentor assessment:** this identifies all five main lecture sections and demonstrates high-level organization of the material. It does not yet independently demonstrate the distinctions between memory content and architecture, historical versus current facts, or evaluation failure attribution. These remain unassessed rather than recorded as errors.
+
+**AI reference summary - L07:**
+
+1. **Motivation:** finite active context and long-running or cross-session work create a need to preserve useful facts, procedures, experience, and unfinished state. External memory can change later behavior without model-weight updates.
+2. **Content roles:** working memory is current reasoning context; episodic memory records what happened; semantic memory holds facts/knowledge; procedural memory describes how to do things. These roles are separate from the choice of files, databases, graphs, or indexes.
+3. **Architecture patterns:** experience reuse retains useful procedures (Voyager/AWM/Skills); tiering selects between active and external detail (MemGPT/MemoryOS); reflection derives reusable lessons (Reflexion/Generative Agents); maintenance organizes, updates, links, reconciles, or prepares memories (A-Mem/Mem0/Sleep-time Compute). They can be composed. Skills specifies packaging/loading, while its authoring or acquisition process can vary.
+4. **Lifecycle decisions:** decide what to write, when to write/retrieve, how to represent/search it, how to apply retrieved evidence, and when to update or forget it. Saving everything does not guarantee effective memory; current validity and historical evidence are different concerns.
+5. **Evaluation:** LoCoMo emphasizes conversational recall/reasoning; PersonaMem emphasizes responses aligned with evolving current preferences; LongMemEval-V2 emphasizes environment experience recovered from agent trajectories; MemoryArena couples earlier experience with later task completion. Use realistic, sufficiently long, challenging, verifiable tasks; inspect quality alongside cost/latency. Retrieved evidence and correct use are separate failure points.
+6. **Challenges:** selection and forgetting can lose useful information; facts can become stale; reflections can be unsupported; poisoned memories can misdirect behavior; privacy and user control matter; irrelevant personalization can hurt answers. End-to-end task failure can also come from planning or execution.
+
+**Application target, not demonstrated mastery:** given one agent scenario, explain what should persist, choose a suitable organization/update/read policy, identify an appropriate evaluation target, and distinguish write, retrieval, evidence-use, and non-memory execution failures. Official applied work remains the main venue for implementation evidence.
+
+**One focused follow-up - current state versus history:** an operations agent recorded last month that a service used MySQL; this week the service migrated to PostgreSQL. How should its memory be organized/updated so it can correctly answer both which database is used now and why the migration happened? A short design explanation is sufficient; no implementation is requested.
+
+**Initial learner response, November 28, faithful English paraphrase:** perhaps the information can simply be kept in a memory database.
+
+**Mentor feedback and graduated hint:** a memory database is a possible persistence mechanism. The response specifies where information could live, but does not yet specify which fact is currently valid, how historical evidence remains available, or where a migration rationale would come from. This is an incomplete policy description, not evidence that the storage choice is wrong. In an illustrative retrieval result, both "the service uses MySQL" from last month and "the service uses PostgreSQL" from this week may appear; retaining them alone does not establish their current validity. Consider time/validity metadata and keep decision reasons traceable to an actual source rather than inferring them from the database change.
+
+**Focused follow-up after the hint:** should the old MySQL fact be deleted, or retained with a historical/expired-validity label, when both current-state and migration-history questions must remain answerable? Explain why in one sentence. This is a mentor-created comprehension scenario, not a required database schema or an executed memory policy.
+
+**Revised learner response, November 28, faithful English translation:** "Keep it, but mark it as historical."
+
+**Check outcome:** correct for this scenario after an explicit hint. The learner selected retention with historical labeling rather than deletion. This demonstrates the narrow distinction between preserving a past fact and treating it as currently valid; the mentor supplies the rationale below. It does not establish an independently designed schema, retrieval policy, provenance mechanism, or implementation. No further required quiz is added to this lecture review.
+
+**Mentor reference answer:** retain the old MySQL fact with its historical validity, update the current service/database fact to PostgreSQL with its effective time, and preserve the migration event/decision with its date, reason, and source evidence. Current-state questions should select currently valid facts; historical questions should access the relevant past state/event and supporting record. If the decision reason is absent, the system should acknowledge that gap instead of inventing a reason from the database change. A single memory database can represent these logical roles; separate databases are not required.
+
+No model, memory operation, benchmark, assignment, or independent implementation was executed in this reflection exchange. L07 is Completed for lecture review; M4 remains In Progress. No score or module completion is inferred.

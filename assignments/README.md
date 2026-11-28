@@ -1,8 +1,35 @@
 # Official Assignment Milestones
 
-Both assignments are major learning milestones. Their starter READMEs and course-level descriptions were inspected on 2026-11-13. The complete PDF specifications have **not yet been reviewed**. Read the current handout before architecture approval or implementation; the notes below are orientation, not a replacement specification.
+Both assignments are major learning milestones. Official starters and local environments were prepared on **2026-11-28**. The READMEs, setup-related handout text, and selected setup pages were inspected; complete PDF specifications have **not** been reviewed end to end. Read the current handout before architecture approval or implementation. No learner solution or written homework answer has been supplied.
 
-No assignment repository has been cloned and no solution has been implemented. When ready, use separate folders such as `hw1-agent-harness/` and `hw2-agent-evaluation/`, preserving starter structure, attribution, and version information. Decide how to manage nested repositories deliberately rather than accidentally committing an embedded repository.
+## Open and start
+
+| Homework | Open in VS Code | Resume instructions |
+|---|---|---|
+| HW1 | [HW1.code-workspace](HW1.code-workspace) | [HW1 START-HERE](hw1-agent-harness/START-HERE.md) |
+| HW2 | [HW2.code-workspace](HW2.code-workspace) | [HW2 START-HERE](hw2-agent-evaluation/START-HERE.md) |
+
+From the study repository root:
+
+```bash
+code assignments/HW1.code-workspace
+# Or, when starting HW2:
+code assignments/HW2.code-workspace
+```
+
+Check either or both local environments without making model calls:
+
+```bash
+python3 assignments/check_setup.py
+python3 assignments/check_setup.py hw1
+python3 assignments/check_setup.py hw2
+```
+
+Both use the already installed Python 3.12.13 and separate `.venv` directories synchronized from the official lock files. The previously configured OpenRouter key is reused only in ignored local `.env` files. Actual model access, credits, and paid evaluations were not tested. HW1's checksum-verified 26,278-email archive is unpacked locally. HW2's Harbor CLI and Docker connection work; task images and evaluation runs remain for the learner's exercises.
+
+See [setup verification](SETUP.md) for exact commands/outcomes and [upstream provenance](upstream.json) for source revisions. Official files and licenses are preserved. The starter directories are regular files in this main repository, not nested repositories or submodules; their original Git metadata is archived under this repository's local `.git` directory.
+
+The learner explicitly authorized publishing the **official starter and setup snapshot** here. The official HW2 handout asks for a private submission repository. Future learner implementations, answers, and run artifacts are not automatically committed or pushed. Credentials, environments, caches, and the downloaded mail archive remain local. This preparation is administration, not assignment completion.
 
 ## HW1 — Build an Agentic Harness
 

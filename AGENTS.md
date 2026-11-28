@@ -11,6 +11,7 @@ The learner has **10 years of backend engineering experience**, including distri
 - Conversations may be Chinese or English, matching the learner's request. All repository content, comments, docstrings, notes, reports, test names/descriptions, configuration documentation, and commit messages must be English.
 - Inspect existing work before editing. Preserve the learner's code and conventions. Create folders only when they contain useful work.
 - Never commit or push without explicit approval. Before proposing a commit, inspect the staged diff for English consistency, secrets, private data, and unnecessary artifacts. If nothing is staged, say so and review the proposed files; do not imply a staged review occurred. Prefer Conventional Commits.
+- On November 28, 2026, the learner authorized keeping the official HW1/HW2 starters and startup configuration in this public study repository and publishing that scaffold snapshot with the current learning records. This authorization does not extend to automatic commits or pushes of future learner implementations, written answers, or run artifacts.
 - Do not expose credentials. Keep `.env`, model caches, downloaded datasets, and raw private traces out of Git. Review sanitized artifacts before publishing.
 - Do not install large dependencies, download models, or launch expensive experiments without explaining the concrete need and expected resource use. Start with deterministic fixtures; propose local Ollama or hosted models based on measured task requirements, not assumptions about equivalence.
 
@@ -32,6 +33,8 @@ When the learner finishes a study week's material, ask what they learned and inv
 After answering a study question, add a concise English question and answer to `lectures/week-NN/questions-and-answers.md` for the learner's current study week. Merge repeated questions into the existing entry. Capture the distinction or example that will help the learner recall the answer. Add cited papers and primary sources to that week's `references.md` with direct links and a short note on why each source matters. Link relevant answers to their references. Label previews of later material so they do not imply completed study.
 
 Include the instructor's section-level recap slides and closing lecture summary in that lecture's review notes, with verified slide/page references. Use faithful English paraphrases, retain qualifications, and label instructor takeaways separately from mentor clarifications and the AI reference summary. Keep these recaps concise and easy to find. They supplement, rather than replace, the learner-first reflection process.
+
+When the learner requests a lecture or topic summary, present an organized explanation directly in the conversation as well as saving the English review notes. Follow the lecture's topic order, distinguish concepts from architectures and implementation choices, and use concise comparisons/examples to support systematic study.
 
 Put the week's selected readings and comparison tasks at the top of `references.md`. Specify the relevant sections or figures, what to compare, and a suggested time budget. Label other citations as references for review so the learner can see the week's workload at a glance.
 

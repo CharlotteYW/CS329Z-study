@@ -21,6 +21,11 @@ htmlcov/
 # Local lecture working copies, credentials, and notebook outputs
 /notebooks/lecture-05/
 
+# Local homework setup logs and machine-specific tool caches
+/assignments/.setup/
+/assignments/hw1-agent-harness/data/emails.jsonl.gz
+/assignments/hw2-agent-evaluation/.cache/
+
 # Local models, downloaded datasets, and unsanitized run artifacts
 .cache/
 .lm_cache/

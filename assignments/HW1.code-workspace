@@ -1,0 +1,74 @@
+{
+  "folders": [
+    {
+      "name": "HW1 - Agent Harness",
+      "path": "hw1-agent-harness"
+    }
+  ],
+  "settings": {
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+    "python.testing.pytestEnabled": true,
+    "python.testing.unittestEnabled": false,
+    "python.testing.pytestArgs": [
+      "tests",
+      "-m",
+      "not live"
+    ],
+    "python.terminal.activateEnvironment": true
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Check local setup (no model calls)",
+        "type": "process",
+        "command": "python3",
+        "args": [
+          "${workspaceFolder:HW1 - Agent Harness}/../check_setup.py",
+          "hw1"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder:HW1 - Agent Harness}"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Collect deterministic tests",
+        "type": "process",
+        "command": "uv",
+        "args": [
+          "run",
+          "--locked",
+          "--no-sync",
+          "pytest",
+          "--collect-only",
+          "-m",
+          "not live",
+          "-q"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder:HW1 - Agent Harness}"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Run deterministic tests (starter stubs are expected to fail)",
+        "type": "process",
+        "command": "uv",
+        "args": [
+          "run",
+          "--locked",
+          "--no-sync",
+          "pytest",
+          "-m",
+          "not live"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder:HW1 - Agent Harness}"
+        },
+        "problemMatcher": [],
+        "group": "test"
+      }
+    ]
+  }
+}

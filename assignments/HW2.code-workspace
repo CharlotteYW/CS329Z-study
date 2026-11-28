@@ -1,0 +1,62 @@
+{
+  "folders": [
+    {
+      "name": "HW2 - Agent Evaluation",
+      "path": "hw2-agent-evaluation"
+    }
+  ],
+  "settings": {
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/bin/python",
+    "python.terminal.activateEnvironment": true
+  },
+  "tasks": {
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Check local setup (no model calls)",
+        "type": "process",
+        "command": "python3",
+        "args": [
+          "${workspaceFolder:HW2 - Agent Evaluation}/../check_setup.py",
+          "hw2"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder:HW2 - Agent Evaluation}"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Show Harbor help",
+        "type": "process",
+        "command": "uv",
+        "args": [
+          "run",
+          "--locked",
+          "--no-sync",
+          "harbor",
+          "--help"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder:HW2 - Agent Evaluation}"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Check submission structure (unfinished work is expected)",
+        "type": "process",
+        "command": "uv",
+        "args": [
+          "run",
+          "--locked",
+          "--no-sync",
+          "python",
+          "check_submission.py"
+        ],
+        "options": {
+          "cwd": "${workspaceFolder:HW2 - Agent Evaluation}"
+        },
+        "problemMatcher": []
+      }
+    ]
+  }
+}

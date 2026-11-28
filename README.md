@@ -19,7 +19,7 @@ The pace is **3–4 hours per week**. Follow the lecture videos, write brief not
 | [lectures/](lectures/01-foundations.md) | Session preparation and subsequent learner notes |
 | [readings/](readings/README.md) | Active paper-reading and presentation protocol |
 | [exercises/](exercises/01-system-boundaries/README.md) | Optional standalone practice, distinct from official homework |
-| [assignments/](assignments/README.md) | HW1/HW2 milestone guidance; implementations created later |
+| [assignments/](assignments/README.md) | HW1/HW2 official starters, prepared local environments, editor workspaces, and milestone guidance |
 | [project/](project/README.md) | Candidate comparison and independent project milestones |
 | [reviews/](reviews/README.md) | Artifact review, rubric, and future assessment evidence |
 
